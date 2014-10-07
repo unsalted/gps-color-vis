@@ -21,30 +21,42 @@ var map = po.map()
  
     
 function KtoRGB(kelvin){
+ 
     var temp = kelvin / 100;
+ 
     var red, green, blue;
-
+ 
     if( temp <= 66 ){ 
-        red = 255;       
+ 
+        red = 255; 
         
         green = temp;
-        green = 99.4708025861 * Math.log(green) - 151.1195681661;
+        green = 99.4708025861 * Math.log(green) - 161.1195681661;
+ 
         
-        if( temp <= 19){ 
-            blue = 0; 
+        if( temp <= 19){
+ 
+            blue = 0;
+ 
         } else {
+ 
             blue = temp-10;
-            blue = 138.5177312231 * Math.log(blue) - 305.0447927307; 
+            blue = 138.5177312231 * Math.log(blue) - 305.0447927307;
+ 
         }
+ 
     } else {
+ 
         red = temp - 60;
         red = 329.698727446 * Math.pow(red, -0.1332047592);
-
+        
         green = temp - 60;
         green = 288.1221695283 * Math.pow(green, -0.0755148492 );
  
         blue = 255;
+ 
     }
+ 
  
     return {
         r : clamp(red,   0, 255),
@@ -71,20 +83,20 @@ map.add(po.image()
     .hosts(["a.", "b.", "c.", ""])));
 
 map.add(po.geoJson()
-    .url("./data/GPSLOG00-1.json") // converted from xml using: http://mapbox.github.io/togeojson/
+    .url("./data/GPSLOG00.geo.json") // converted from xml using: http://mapbox.github.io/togeojson/
     .id("dot")
     .zoom(16)
     .tile(false)
   .on("load", po.stylist()
     .attr("fill", function(d) { return (
             "rgb("+
-            KtoRGB(d.properties.name).r+","+
-            KtoRGB(d.properties.name).g+","+
-            KtoRGB(d.properties.name).r+")"
+            KtoRGB(d.properties.color_temp).r+","+
+            KtoRGB(d.properties.color_temp).g+","+
+            KtoRGB(d.properties.color_temp).b+")"
         )
     })
     .attr("r", function(d) { return .9})
-    .title(function(d) { return d.properties.time + ": " + d.properties.name + " KelvinGPSLOG00-1.json"; }))
+    .title(function(d) { return d.properties.time + ": " + d.properties.color_temp + " Kelvin"; }))
   );
 
 map.add(po.compass()
